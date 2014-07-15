@@ -3,6 +3,8 @@
 import cv2
 import numpy as np
 import scipy.io as sio
+import matplotlib.pyplot as plt
+from matplotlib import animation
 import Farneback
 
 
@@ -29,6 +31,8 @@ prvs = Img2Gray(img)
 
 farn = Farneback.Farneback()
 
+fig = plt.figure()
+ims = []
 
 for i in range(n_images):
     frame2 = np.transpose(thermal_cube[:,:,i])
@@ -44,5 +48,12 @@ for i in range(n_images):
         break
     
     prvs = nxt
+    
+    im = plt.imshow(farn.magnitude_image)
+    ims.append([im])
+    
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=10)
+
+plt.show()
 
 cv2.destroyAllWindows()

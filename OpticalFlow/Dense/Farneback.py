@@ -15,6 +15,7 @@ class Farneback(object):
         self.poly_sigma = poly_sigma
         
         self.motion_image = None
+        self.magnitude_image = None
         
     
     def CalculateOpticalFlow(self, prev, nxt):
@@ -29,4 +30,5 @@ class Farneback(object):
         hsv[...,2] = cv2.normalize(mag,None,0,255,cv2.NORM_MINMAX)
         hsv = np.array(hsv, dtype=np.uint8)
         self.motion_image = cv2.cvtColor(hsv,cv2.COLOR_HSV2BGR)
+        self.magnitude_image = hsv[...,2]
 
