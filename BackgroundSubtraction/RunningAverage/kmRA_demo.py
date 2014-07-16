@@ -15,7 +15,8 @@ n_images = thermal_cube.shape[2]
 
 img = np.transpose(thermal_cube[:,:,0])
 
-ra = RunningAverage.RunningAverageBS(weight=0.1)
+# history of 10 seconds for 7.5 fps --> weight = 0.013
+ra = RunningAverage.RunningAverageBS(weight=0.013) 
 
 ra.ApplyBS(img)
 
@@ -26,6 +27,8 @@ fg = ra.fg_image
 fig = plt.figure()
 ims = []
 
+total = np.concatenate((bg, fg), axis=1)
+
 for i in range(n_images):
     img = np.transpose(thermal_cube[:,:,i])
     ra.ApplyBS(img)
@@ -33,7 +36,11 @@ for i in range(n_images):
     bg = ra.bg_image
     fg = ra.fg_image
     
-    temp = fg
+    fg[fg >=1.25] = np.max(img)
+    fg[fg < 1.25] = np.min(img)    
+    
+    temp = np.concatenate((bg, img), axis=1)    
+    temp = np.concatenate((temp, fg), axis=1)    
     
     im = plt.imshow(temp)
     ims.append([im])

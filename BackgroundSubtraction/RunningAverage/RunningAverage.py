@@ -17,7 +17,10 @@ class RunningAverageBS(object):
             self.bg_image = img
             
         else:
-            cv2.accumulateWeighted(img, self.bg_image, self.weight)
+            beta = 1 - self.weight
+            alpha = self.weight
+            gamma = 0.0
+            self.bg_image = cv2.addWeighted(img, alpha, self.bg_image, beta, gamma)
             
             
     def ExtractFG(self, img):
