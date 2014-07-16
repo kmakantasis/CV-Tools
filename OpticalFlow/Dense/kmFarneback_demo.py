@@ -49,10 +49,16 @@ for i in range(n_images):
     
     prvs = nxt
     
-    im = plt.imshow(farn.magnitude_image)
+    temp = np.array(farn.magnitude_image, dtype=np.float64)
+    temp[temp >=32] = np.max(frame2)
+    temp[temp < 32] = np.min(frame2)    
+    
+    temp2 = np.concatenate((frame2, temp), axis=1)        
+    
+    im = plt.imshow(temp2)
     ims.append([im])
     
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=10)
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=100)
 
 plt.show()
 
