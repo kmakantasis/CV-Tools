@@ -16,6 +16,8 @@ filt_labels, areas, new_labels = Morphology.FilterArea(img, labels, nb_labels, 7
 
 rois = Morphology.DrawRectangle(np.asarray(filt_labels, dtype=np.int32), new_labels, color=(6,0,0))
 
+cm = ndimage.center_of_mass(img, filt_labels, range(1,new_labels+1))
+
 temp = np.concatenate((labels, filt_labels), axis=1)
 temp = np.concatenate((temp, rois), axis=1)
 
