@@ -28,7 +28,7 @@ def FilterArea(img, labels, nb_labels, threshold):
     new_labels = np.unique(filt_labels)
     filt_labels = np.searchsorted(new_labels, filt_labels)
         
-    return filt_labels, areas
+    return filt_labels, areas, new_labels.shape[0]-1
     
     
 def DrawRectangle(img, nb_labels, color=(255,0,0)):

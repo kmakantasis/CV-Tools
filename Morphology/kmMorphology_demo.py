@@ -12,11 +12,13 @@ ret, img = cv2.threshold(img, 128, 1, cv2.THRESH_BINARY)
 
 labels, nb_labels = Morphology.ConnenctedComponents(img)
 
-filt_labels, areas = Morphology.FilterArea(img, labels, nb_labels, 3100)
+filt_labels, areas, new_labels = Morphology.FilterArea(img, labels, nb_labels, 7100)
 
-rois = Morphology.DrawRectangle(labels, nb_labels, color=(6,0,0))
+rois = Morphology.DrawRectangle(np.asarray(filt_labels, dtype=np.int32), new_labels, color=(6,0,0))
 
-temp = np.concatenate((labels, rois), axis=1)
+temp = np.concatenate((labels, filt_labels), axis=1)
+temp = np.concatenate((temp, rois), axis=1)
+
 
 fig = plt.figure()
 im = plt.imshow(temp)
