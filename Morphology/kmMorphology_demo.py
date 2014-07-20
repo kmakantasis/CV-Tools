@@ -15,13 +15,7 @@ labels, nb_labels = Morphology.ConnenctedComponents(img)
 filt_labels, new_labels = Morphology.FilterArea(img, labels, nb_labels, 7100)
 
 rois = Morphology.DrawRectangle(np.asarray(filt_labels, dtype=np.int32), labels, new_labels, color=(6,0,0))
-
-
-
-
 temp = np.concatenate((labels, filt_labels), axis=1)
-temp = np.concatenate((temp, rois), axis=1)
-
 
 fig = plt.figure()
 im = plt.imshow(temp)
