@@ -30,7 +30,7 @@ for i in range(n_images):
         
     else:
         sbgm.ConstructHistory(img)
-        sbgm.SubtractBG(img)
+        sbgm.SubtractBG()
         sbgm.ExtractDiffFG(img)
         
         bg_image = sbgm.bg_image

@@ -37,6 +37,9 @@ total = np.concatenate((bg, fg), axis=1)
 bin_fg = np.zeros(shape=(fg.shape[0], fg.shape[1]), dtype=np.int32)
 struct1 = ndimage.generate_binary_structure(2, 1)
 
+pts1 = np.float32([[260,240],[15,240],[190,0],[140,0]])
+pts2 = np.float32([[200,240],[130,240],[190,0],[140,0]])
+M = cv2.getPerspectiveTransform(pts1,pts2)
 
 for i in range(n_images):
     img = np.transpose(thermal_cube[:,:,i])
@@ -52,19 +55,23 @@ for i in range(n_images):
     bin_fg = ndimage.binary_dilation(bin_fg, structure=struct1, iterations=3).astype(bin_fg.dtype)
     
     labels, nb_labels = Morphology.ConnenctedComponents(bin_fg)    
-    filt_labels, areas, nb_new_labels = Morphology.FilterArea(bin_fg, labels, nb_labels, 150)
+    filt_labels, nb_new_labels = Morphology.FilterArea(bin_fg, labels, nb_labels, 150)
     rois = Morphology.DrawRectangle(np.asarray(filt_labels, dtype=np.int32), img, nb_new_labels, color=(305,0,0))
     
     
     fg[fg >=1.25] = np.max(img)
     fg[fg < 1.25] = np.min(img)    
     
-    temp = np.concatenate((bg, img), axis=1)    
+    dst = cv2.warpPerspective(bg,M,(320,240))
+    dst[dst<np.min(img)] = np.min(img)
+
+    temp = np.concatenate((dst, bg), axis=1)    
+    temp = np.concatenate((temp, img), axis=1)    
     temp = np.concatenate((temp, fg), axis=1)    
     
     im = plt.imshow(temp)
     ims.append([im])
     
 ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=100)
-ani.save('../../results/runnimg_average.mp4', fps=25, dpi=300)
+#ani.save('../../results/runnimg_average.mp4', fps=25, dpi=300)
 plt.show()
